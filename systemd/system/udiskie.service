@@ -1,0 +1,11 @@
+[Unit]
+Description=automount usb drives with udiskie
+After=udisks2.service
+
+[Service]
+ExecStart=/usr/bin/udiskie --no-appindicator --automount --no-notify --no-tray
+Restart=always
+RestartSec=3000
+
+[Install]
+WantedBy=default.target

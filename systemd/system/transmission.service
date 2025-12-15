@@ -1,0 +1,37 @@
+# remeber 
+[Unit]
+Description=transmission daemon (bittorrent)
+After=network.target
+
+[Service]
+User=trash
+Group=trash
+Type=simple
+
+ExecStartPre=/usr/bin/transmission-daemon \
+  --auth \
+  --username trash \
+  --password mission \
+  --logfile /home/trash/transmission/transmission.log \
+  --incomplete-dir /home/trash/transmission \
+  --config-dir /home/trash/transmission/config \
+  --download-dir /home/trash/feet/downloads/torrents \
+  --watch-dir /home/trash/feet/downloads/torrents \
+  --rpc-bind-address 0.0.0.0 \
+  --port 3002 \
+  --peerport 52423
+
+ExecStart=/usr/bin/flood-linux-arm64 \
+  --host 0.0.0.0 \
+  --port 9060 \
+  --rundir /home/trash/transmission \
+  --truser trash \
+  --trpass mission \
+  --trurl http://127.0.0.1:9091/transmission/rpc
+
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+

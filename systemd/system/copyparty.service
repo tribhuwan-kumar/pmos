@@ -1,0 +1,44 @@
+[Unit]
+Description=copyparty file server
+After=network.target
+
+[Service]
+User=trash
+Group=trash
+WorkingDirectory=/home/trash
+Environment=HOME=/home/trash
+
+Type=notify
+SyslogIdentifier=copyparty
+Environment=PYTHONUNBUFFERED=x
+ExecReload=/bin/kill -s USR1 $MAINPID
+PermissionsStartOnly=true
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+MemoryMax=30%
+MemorySwapMax=50%
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectProc=invisible
+RemoveIPC=true
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+
+ExecStart=/usr/bin/python3 \
+        /usr/local/bin/copyparty-sfx.py \
+        -s \
+        -nb \
+        -p 3001 \
+        -a user:password \
+        -v /path/to/voulme::A,user \
+        -v /path/to/another/voulme:/guest:r \
+        --ui-filesz 4c \
+        --chdir /home/trash
+
+[Install]
+WantedBy=multi-user.target

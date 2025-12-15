@@ -1,0 +1,43 @@
+[Unit]
+Description=Podman container-jackett.service
+Documentation=man:podman-generate-systemd(1)
+Wants=network-online.target
+After=network-online.target
+RequiresMountsFor=%t/containers
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=always
+TimeoutStopSec=70
+ExecStart=/usr/bin/podman run \
+        --cidfile=%t/%n.ctr-id \
+        --cgroups=no-conmon \
+        --rm \
+        --sdnotify=conmon \
+        --replace \
+        -d \
+        --name jackett \
+        --dns=8.8.8.8 \
+        --dns=1.1.1.1 \
+        --oom-score-adj=-500 \
+        --memory=2g \
+        --memory-swap=3g \
+        -e PUID=1000 \
+        -e PGID=1000 \
+        -e TZ=Etc/UTC \
+        -e AUTO_UPDATE=true \
+        -p 9070:9117 \
+        -v /path/to/config:/config \
+        -v /path/to/torrents/download:/downloads lscr.io/linuxserver/jackett:latest
+ExecStop=/usr/bin/podman stop \
+        --ignore -t 10 \
+        --cidfile=%t/%n.ctr-id
+ExecStopPost=/usr/bin/podman rm \
+        -f \
+        --ignore -t 10 \
+        --cidfile=%t/%n.ctr-id
+Type=notify
+NotifyAccess=all
+
+[Install]
+WantedBy=default.target
