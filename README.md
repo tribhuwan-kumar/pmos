@@ -3,11 +3,13 @@
 ### for making the smartphone batterless checkout [batterless docs](./BATTERYLESS.md)
 
 ### install some esssential pacakages:
-```
+```bash
+# connect wifi
+nmcli --ask dev wifi connect <SSID> 
 apk add --no-cache networkmanager netavark iptables iw ntfs-3g psutil pip py3-psutil openssh podman-compose du coreutils mediainfo openssh nfs-utils rsync curl libstdc++ py3-pip vips-tools vips vips-dev python3-dev build-base mesa-utils transmission-daemon
 ```
 
-```
+```bash
 curl -LO https://github.com/tribhuwan-kumar/pmos/archive/refs/heads/main.zip
 unzip main.zip
 cd main
